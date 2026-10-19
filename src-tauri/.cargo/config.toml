@@ -1,0 +1,26 @@
+# ================================================================
+# Dulce Arte ERP — Cargo Build Configuration
+# 32-bit (i686) and 64-bit (x86_64) targets for Linux and Windows
+# ================================================================
+
+[target.x86_64-unknown-linux-gnu]
+rustflags = ["-C", "target-feature=+sse2"]
+
+[target.i686-unknown-linux-gnu]
+rustflags = ["-C", "target-feature=+sse2"]
+linker = "x86_64-linux-gnu-gcc"
+ar = "x86_64-linux-gnu-ar"
+
+[target.x86_64-pc-windows-msvc]
+rustflags = []
+
+[target.i686-pc-windows-msvc]
+rustflags = []
+
+# Shared build profile
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

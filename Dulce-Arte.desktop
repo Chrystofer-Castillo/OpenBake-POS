@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Dulce Arte ERP
+Comment=Sistema de Gestión para Heladería y Repostería
+Exec="/home/chrystofer-castillo/Documentos/Heladeria favian/dulce arte/iniciar-dulce-arte.sh"
+Icon=applications-accessories
+Terminal=false
+Categories=Office;Finance;
+StartupNotify=true
