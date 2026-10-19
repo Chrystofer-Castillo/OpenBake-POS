@@ -31,7 +31,6 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "identifier": "com.dulcearte.erp",
     "publisher": "Dulce Arte",
     "copyright": "© 2026 Dulce Arte. Todos los derechos reservados.",
     "category": "Business",
@@ -55,9 +54,7 @@
       },
       "appimage": {
         "bundleMediaFramework": true
-      },
-      "arch": ["x86_64", "i686"]
+      }
     }
   }
 }
-
