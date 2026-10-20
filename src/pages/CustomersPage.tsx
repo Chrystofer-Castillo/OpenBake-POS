@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useAppStore } from '../store/appStore';
 import {
   Users, Plus, Search, MessageSquare, DollarSign,
-  AlertCircle, CheckCircle, Edit3
+  AlertCircle, CheckCircle, Edit3, Clock, AlertTriangle
 } from 'lucide-react';
 import type { Customer, PriceMode } from '../types';
 
@@ -27,6 +27,7 @@ export default function CustomersPage() {
   const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
   const [defaultPriceMode, setDefaultPriceMode] = useState<PriceMode>('DYNAMIC');
+  const [paymentDueDate, setPaymentDueDate] = useState('');
 
   // Payment Abono Modal
   const [abonoModalOpen, setAbonoModalOpen] = useState(false);
@@ -41,20 +42,26 @@ export default function CustomersPage() {
     }
 
     const cleanPhone = c.phoneWa.replace(/[^\d]/g, '');
+    const dueDateStr = c.paymentDueDate
+      ? new Date(c.paymentDueDate).toLocaleDateString('es-VE', { day: '2-digit', month: 'long', year: 'numeric' })
+      : 'lo antes posible';
     let msg = settings.waTemplate
       .replace('{nombreCliente}', c.fullName)
       .replace('{nombreNegocio}', settings.businessName)
       .replace('{saldoPendiente}', `$${c.totalDebt.toFixed(2)} (Bs. ${(c.totalDebt * settings.bcvRate).toFixed(2)})`)
-      .replace('{fechaLimite}', 'lo antes posible');
+      .replace('{fechaLimite}', dueDateStr);
 
     const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank');
   };
 
+  // MODULE 2 FIX: Search also matches phone/WhatsApp numbers
   const filteredCustomers = useMemo(() => {
     return customers.filter(c => {
-      const match = c.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    c.cedulaRif.toLowerCase().includes(searchTerm.toLowerCase());
+      const term = searchTerm.toLowerCase();
+      const match = c.fullName.toLowerCase().includes(term) ||
+                    c.cedulaRif.toLowerCase().includes(term) ||
+                    (c.phoneWa && c.phoneWa.replace(/[\s\-\+]/g, '').includes(searchTerm.replace(/[\s\-\+]/g, '')));
       if (!match) return false;
       if (filterSolvency === 'DEBT') return c.totalDebt > 0;
       if (filterSolvency === 'OK') return c.totalDebt <= 0;
@@ -71,6 +78,22 @@ export default function CustomersPage() {
     return customers.filter(c => c.totalDebt > 0).length;
   }, [customers]);
 
+  // Due date helpers
+  const getDueDateStatus = (c: Customer) => {
+    if (!c.paymentDueDate || c.totalDebt <= 0) return null;
+    const now = new Date();
+    const due = new Date(c.paymentDueDate);
+    const diffDays = Math.ceil((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) return 'overdue';
+    if (diffDays <= 3) return 'soon';
+    return 'ok';
+  };
+
+  const formatDueDate = (dateStr: string | null) => {
+    if (!dateStr) return null;
+    return new Date(dateStr).toLocaleDateString('es-VE', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
+
   const handleOpenNew = () => {
     setEditingId(null);
     setCedulaRif('V-');
@@ -79,6 +102,7 @@ export default function CustomersPage() {
     setAddress('');
     setNotes('');
     setDefaultPriceMode('DYNAMIC');
+    setPaymentDueDate('');
     setIsModalOpen(true);
   };
 
@@ -90,6 +114,7 @@ export default function CustomersPage() {
     setAddress(c.address || '');
     setNotes(c.notes || '');
     setDefaultPriceMode(c.defaultPriceMode);
+    setPaymentDueDate(c.paymentDueDate ? c.paymentDueDate.slice(0, 10) : '');
     setIsModalOpen(true);
   };
 
@@ -97,24 +122,20 @@ export default function CustomersPage() {
     e.preventDefault();
     if (!fullName.trim() || !cedulaRif.trim()) return;
 
+    const data = {
+      cedulaRif,
+      fullName,
+      phoneWa,
+      address,
+      notes,
+      defaultPriceMode,
+      paymentDueDate: paymentDueDate ? new Date(paymentDueDate).toISOString() : null,
+    };
+
     if (editingId) {
-      updateCustomer(editingId, {
-        cedulaRif,
-        fullName,
-        phoneWa,
-        address,
-        notes,
-        defaultPriceMode
-      });
+      updateCustomer(editingId, data);
     } else {
-      addCustomer({
-        cedulaRif,
-        fullName,
-        phoneWa,
-        address,
-        notes,
-        defaultPriceMode
-      });
+      addCustomer(data);
     }
 
     setIsModalOpen(false);
@@ -123,7 +144,10 @@ export default function CustomersPage() {
   const handleApplyAbono = () => {
     if (!selectedCust || abonoAmount <= 0) return;
     const newDebt = Math.max(0, selectedCust.totalDebt - abonoAmount);
-    updateCustomer(selectedCust.id, { totalDebt: newDebt });
+    updateCustomer(selectedCust.id, {
+      totalDebt: newDebt,
+      paymentDueDate: newDebt <= 0 ? null : selectedCust.paymentDueDate,
+    });
     pushAlert({
       type: 'success',
       message: `Abono de $${abonoAmount.toFixed(2)} registrado para ${selectedCust.fullName}`
@@ -186,14 +210,14 @@ export default function CustomersPage() {
         </div>
       </div>
 
-      {/* Search and Filters */}
+      {/* Search and Filters — MODULE 2 FIX: placeholder updated */}
       <div className="card" style={{ padding: 'var(--space-4)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
         <div className="flex items-center gap-2" style={{ flex: 1, minWidth: 260 }}>
           <Search size={16} color="var(--clr-text-muted)" />
           <input
             type="text"
             className="input"
-            placeholder="Buscar por nombre o cédula/RIF..."
+            placeholder="Buscar por nombre, cédula/RIF o teléfono..."
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />
@@ -224,7 +248,7 @@ export default function CustomersPage() {
         </div>
       </div>
 
-      {/* Customers Table */}
+      {/* Customers Table — MODULE 3: Added due date column */}
       <div className="table-container">
         <table className="table">
           <thead>
@@ -235,17 +259,26 @@ export default function CustomersPage() {
               <th>TELÉFONO / WHATSAPP</th>
               <th>DIRECCIÓN / ZONA</th>
               <th>DEUDA PENDIENTE ($)</th>
+              <th>FECHA LÍMITE</th>
               <th style={{ textAlign: 'right' }}>ACCIONES</th>
             </tr>
           </thead>
           <tbody>
-            {filteredCustomers.map(cust => (
+            {filteredCustomers.map(cust => {
+              const dueStatus = getDueDateStatus(cust);
+              return (
               <tr key={cust.id}>
                 <td>
                   {cust.totalDebt > 0 ? (
-                    <span className="badge badge-red flex items-center gap-1" style={{ fontSize: 10 }}>
-                      <AlertCircle size={10} /> Deuda
-                    </span>
+                    dueStatus === 'overdue' ? (
+                      <span className="badge badge-red flex items-center gap-1" style={{ fontSize: 10 }}>
+                        <AlertTriangle size={10} /> Vencido
+                      </span>
+                    ) : (
+                      <span className="badge badge-red flex items-center gap-1" style={{ fontSize: 10 }}>
+                        <AlertCircle size={10} /> Deuda
+                      </span>
+                    )
                   ) : (
                     <span className="badge badge-mint flex items-center gap-1" style={{ fontSize: 10 }}>
                       <CheckCircle size={10} /> Solvente
@@ -280,6 +313,23 @@ export default function CustomersPage() {
                       </span>
                     )}
                   </div>
+                </td>
+                {/* MODULE 3: Due Date column */}
+                <td>
+                  {cust.totalDebt > 0 && cust.paymentDueDate ? (
+                    <div className="flex items-center gap-1" style={{
+                      color: dueStatus === 'overdue' ? 'var(--clr-danger)'
+                           : dueStatus === 'soon' ? 'var(--clr-warning)'
+                           : 'var(--clr-text-secondary)',
+                      fontSize: 12,
+                      fontWeight: dueStatus === 'overdue' ? 700 : 500
+                    }}>
+                      <Clock size={12} />
+                      <span>{formatDueDate(cust.paymentDueDate)}</span>
+                    </div>
+                  ) : (
+                    <span style={{ fontSize: 12, color: 'var(--clr-text-muted)' }}>—</span>
+                  )}
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   <div className="flex items-center justify-end gap-1">
@@ -318,25 +368,15 @@ export default function CustomersPage() {
                   </div>
                 </td>
               </tr>
-            ))}
+            )})}
           </tbody>
         </table>
       </div>
 
-      {/* CREATE / EDIT CUSTOMER MODAL */}
+      {/* CREATE / EDIT CUSTOMER MODAL — MODULE 4 FIX: uses .modal-overlay class */}
       {isModalOpen && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0,0,0,0.7)',
-          backdropFilter: 'blur(5px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          padding: 20
-        }}>
-          <div className="card animate-fadeIn" style={{ maxWidth: 500, width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}>
+          <div className="modal-content animate-fadeIn" style={{ maxWidth: 520, width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
             <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--clr-text-primary)' }}>
               {editingId ? 'Editar Cliente' : 'Nuevo Cliente'}
             </h2>
@@ -401,6 +441,22 @@ export default function CustomersPage() {
                 />
               </div>
 
+              {/* MODULE 3: Payment Due Date Field */}
+              <div>
+                <label style={{ fontSize: 12, color: 'var(--clr-text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Clock size={12} /> Fecha Límite de Pago
+                </label>
+                <input
+                  type="date"
+                  className="input font-mono"
+                  value={paymentDueDate}
+                  onChange={e => setPaymentDueDate(e.target.value)}
+                />
+                <span style={{ fontSize: 10, color: 'var(--clr-text-muted)', marginTop: 2, display: 'block' }}>
+                  Opcional. Se usa para recordatorios de cobranza automáticos por WhatsApp.
+                </span>
+              </div>
+
               <div className="flex items-center justify-end gap-3" style={{ marginTop: 12 }}>
                 <button type="button" onClick={() => setIsModalOpen(false)} className="btn btn-secondary">
                   Cancelar
@@ -414,20 +470,10 @@ export default function CustomersPage() {
         </div>
       )}
 
-      {/* ABONO MODAL */}
+      {/* ABONO MODAL — MODULE 4 FIX: uses .modal-overlay class */}
       {abonoModalOpen && selectedCust && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0,0,0,0.7)',
-          backdropFilter: 'blur(5px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          padding: 20
-        }}>
-          <div className="card animate-fadeIn" style={{ maxWidth: 420, width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setAbonoModalOpen(false); }}>
+          <div className="modal-content animate-fadeIn" style={{ maxWidth: 420, width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
             <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--clr-text-primary)' }}>
               Registrar Abono a Cuenta Corriente
             </h2>

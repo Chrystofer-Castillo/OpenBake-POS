@@ -693,7 +693,7 @@ export default function LaboratoryPage() {
                   Margen de error:
                 </span>
                 <div style={{
-                  background: '#FFFFFF',
+                  background: 'var(--clr-bg-surface)',
                   border: '1px solid var(--clr-border-strong)',
                   borderRadius: 'var(--radius-sm)',
                   padding: '4px 10px',
@@ -737,10 +737,10 @@ export default function LaboratoryPage() {
 
             {/* Cost Breakdown Block (Matching Image) */}
             <div style={{
-              background: '#FFF9F1',
+              background: 'var(--clr-bg-subtle)',
               borderRadius: 'var(--radius-md)',
               padding: '16px 20px',
-              border: '1px solid #F2E4D4',
+              border: '1px solid var(--clr-border)',
               display: 'grid',
               gridTemplateColumns: '1fr 1.3fr',
               alignItems: 'center',
@@ -750,7 +750,7 @@ export default function LaboratoryPage() {
                 <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--clr-text-secondary)', display: 'block' }}>
                   Costo Base:
                 </span>
-                <span className="font-mono" style={{ fontSize: 34, fontWeight: 800, color: '#2A1B12', letterSpacing: '-0.03em' }}>
+                <span className="font-mono" style={{ fontSize: 34, fontWeight: 800, color: 'var(--clr-text-primary)', letterSpacing: '-0.03em' }}>
                   ${costs.baseTotal.toFixed(2)}
                 </span>
               </div>
@@ -758,11 +758,11 @@ export default function LaboratoryPage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 13 }}>
                 <div className="flex items-center justify-between">
                   <span style={{ color: 'var(--clr-text-secondary)' }}>Insumos:</span>
-                  <span className="font-mono font-bold">${costs.ingredients.toFixed(2)}</span>
+                  <span className="font-mono font-bold" style={{ color: 'var(--clr-text-primary)' }}>${costs.ingredients.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span style={{ color: 'var(--clr-text-secondary)' }}>Empaque:</span>
-                  <div className="flex items-center gap-1 font-mono font-bold">
+                  <div className="flex items-center gap-1 font-mono font-bold" style={{ color: 'var(--clr-text-primary)' }}>
                     <span>$</span>
                     <input
                       type="number"
@@ -770,13 +770,13 @@ export default function LaboratoryPage() {
                       min="0"
                       value={packagingCost}
                       onChange={e => setPackagingCost(Number(e.target.value))}
-                      style={{ width: 55, border: 'none', background: 'transparent', textAlign: 'right', fontWeight: 700, fontFamily: 'inherit', outline: 'none' }}
+                      style={{ width: 55, border: 'none', background: 'transparent', textAlign: 'right', fontWeight: 700, fontFamily: 'inherit', outline: 'none', color: 'var(--clr-text-primary)' }}
                     />
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <span style={{ color: 'var(--clr-text-secondary)' }}>Mano de Obra/Servicios:</span>
-                  <div className="flex items-center gap-1 font-mono font-bold">
+                  <div className="flex items-center gap-1 font-mono font-bold" style={{ color: 'var(--clr-text-primary)' }}>
                     <span>$</span>
                     <input
                       type="number"
@@ -784,7 +784,7 @@ export default function LaboratoryPage() {
                       min="0"
                       value={laborAndServices}
                       onChange={e => setLaborAndServices(Number(e.target.value))}
-                      style={{ width: 55, border: 'none', background: 'transparent', textAlign: 'right', fontWeight: 700, fontFamily: 'inherit', outline: 'none' }}
+                      style={{ width: 55, border: 'none', background: 'transparent', textAlign: 'right', fontWeight: 700, fontFamily: 'inherit', outline: 'none', color: 'var(--clr-text-primary)' }}
                     />
                   </div>
                 </div>
@@ -793,7 +793,7 @@ export default function LaboratoryPage() {
 
             {/* Wholesale percentage slider bar (Solicitado por el usuario) */}
             <div style={{
-              background: '#F8F4EE',
+              background: 'var(--clr-bg-subtle)',
               borderRadius: 'var(--radius-sm)',
               padding: '10px 14px',
               display: 'flex',
@@ -804,7 +804,7 @@ export default function LaboratoryPage() {
                 <span style={{ fontWeight: 700, color: 'var(--clr-text-secondary)' }}>
                   Margen Descuento al Mayor:
                 </span>
-                <span className="font-mono font-bold" style={{ color: 'var(--clr-gold-600)' }}>
+                <span className="font-mono font-bold" style={{ color: 'var(--clr-gold-500)' }}>
                   {wholesaleCustomPct}%
                 </span>
               </div>
@@ -823,7 +823,7 @@ export default function LaboratoryPage() {
               
               {/* Precio Mínimo (Piso) */}
               <div style={{
-                background: '#FFFFFF',
+                background: 'var(--clr-bg-card)',
                 border: '1px solid var(--clr-border-strong)',
                 borderRadius: 'var(--radius-md)',
                 padding: '16px 12px',
@@ -836,7 +836,7 @@ export default function LaboratoryPage() {
                 <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--clr-text-secondary)', lineHeight: 1.2 }}>
                   Precio Mínimo<br />(Piso):
                 </span>
-                <span className="font-mono font-bold" style={{ fontSize: 24, color: '#2A1B12' }}>
+                <span className="font-mono font-bold" style={{ fontSize: 24, color: 'var(--clr-text-primary)' }}>
                   ${prices.piso.toFixed(2)}
                 </span>
               </div>
@@ -864,7 +864,7 @@ export default function LaboratoryPage() {
 
               {/* Precio Premium */}
               <div style={{
-                background: '#FFFFFF',
+                background: 'var(--clr-bg-card)',
                 border: '1px solid var(--clr-border-strong)',
                 borderRadius: 'var(--radius-md)',
                 padding: '16px 12px',
@@ -877,7 +877,7 @@ export default function LaboratoryPage() {
                 <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--clr-text-secondary)', lineHeight: 1.2 }}>
                   Precio<br />Premium:
                 </span>
-                <span className="font-mono font-bold" style={{ fontSize: 24, color: '#2A1B12' }}>
+                <span className="font-mono font-bold" style={{ fontSize: 24, color: 'var(--clr-text-primary)' }}>
                   ${prices.premium.toFixed(2)}
                 </span>
               </div>
@@ -886,7 +886,7 @@ export default function LaboratoryPage() {
 
             {/* Wholesale Price Badge */}
             <div className="flex items-center justify-between" style={{
-              background: '#FFF8EE',
+              background: 'var(--clr-bg-elevated)',
               border: '1px dashed var(--clr-gold-400)',
               borderRadius: 'var(--radius-sm)',
               padding: '8px 14px'
@@ -894,12 +894,12 @@ export default function LaboratoryPage() {
               <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--clr-text-secondary)' }}>
                 Precio Mayorista Calculado:
               </span>
-              <span className="font-mono font-bold" style={{ fontSize: 16, color: 'var(--clr-gold-600)' }}>
+              <span className="font-mono font-bold" style={{ fontSize: 16, color: 'var(--clr-gold-500)' }}>
                 ${prices.mayor.toFixed(2)}
               </span>
             </div>
 
-            {/* Prominent Dark Button: [Copiar Consulta para IA] 🪄+AI */}
+            {/* Prominent Button: [Copiar Consulta para IA] 🪄+AI */}
             <button
               onClick={() => setIsAiModalOpen(true)}
               className="btn btn-primary"
@@ -910,9 +910,9 @@ export default function LaboratoryPage() {
                 fontSize: 15,
                 fontWeight: 700,
                 letterSpacing: '0.01em',
-                background: '#2A1A12',
-                color: '#FFFFFF',
-                boxShadow: '0 6px 18px rgba(42, 26, 18, 0.25)'
+                background: 'var(--clr-text-primary)',
+                color: 'var(--clr-bg-base)',
+                boxShadow: 'var(--shadow-md)'
               }}
             >
               <span>[Copiar Consulta para IA]</span>
@@ -929,7 +929,7 @@ export default function LaboratoryPage() {
       {/* Bottom Status Bar (Matching Image) */}
       <div className="flex items-center justify-between" style={{
         padding: '12px 20px',
-        background: '#FFFFFF',
+        background: 'var(--clr-bg-card)',
         borderRadius: 'var(--radius-md)',
         border: '1px solid var(--clr-border)',
         boxShadow: 'var(--shadow-sm)',
@@ -962,18 +962,8 @@ export default function LaboratoryPage() {
 
       {/* CUSTOM INGREDIENT MODAL (Solicitud del usuario) */}
       {isCustomMatModalOpen && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(30, 20, 10, 0.65)',
-          backdropFilter: 'blur(5px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          padding: 20
-        }}>
-          <div className="card animate-fadeIn" style={{ maxWidth: 480, width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setIsCustomMatModalOpen(false); }}>
+          <div className="modal-content animate-fadeIn" style={{ maxWidth: 480, width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
             <h2 style={{ fontSize: 18, fontWeight: 800, color: 'var(--clr-text-primary)' }}>
               Agregar Ingrediente Personalizado
             </h2>
@@ -1043,18 +1033,8 @@ export default function LaboratoryPage() {
 
       {/* AI PROMPT MODAL */}
       {isAiModalOpen && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(30, 20, 10, 0.75)',
-          backdropFilter: 'blur(6px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          padding: 20
-        }}>
-          <div className="card animate-fadeIn" style={{
+        <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setIsAiModalOpen(false); }}>
+          <div className="modal-content animate-fadeIn" style={{
             maxWidth: 720,
             width: '100%',
             display: 'flex',
@@ -1132,18 +1112,8 @@ export default function LaboratoryPage() {
 
       {/* CREATE NEW RECIPE MODAL */}
       {isNewRecipeModalOpen && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(30, 20, 10, 0.65)',
-          backdropFilter: 'blur(5px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          padding: 20
-        }}>
-          <div className="card animate-fadeIn" style={{ maxWidth: 460, width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setIsNewRecipeModalOpen(false); }}>
+          <div className="modal-content animate-fadeIn" style={{ maxWidth: 460, width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div className="flex items-center justify-between" style={{ borderBottom: '1px solid var(--clr-border)', paddingBottom: 10 }}>
               <h2 style={{ fontSize: 18, fontWeight: 800, color: 'var(--clr-text-primary)' }}>
                 Crear Nueva Receta / Fórmula

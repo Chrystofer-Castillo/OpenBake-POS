@@ -1,6 +1,6 @@
 #!/bin/bash
 # ================================================================
-# DULCE ARTE ERP — Lanzador de Escritorio
+# DULCE ARTE ERP — Lanzador Oficial de Escritorio
 # ================================================================
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -8,27 +8,32 @@ cd "$DIR"
 
 echo "🍰 Iniciando Dulce Arte ERP..."
 
-# Verificar si el servidor ya está activo, si no, iniciarlo
-if ! curl -s http://localhost:5173 > /dev/null; then
-  echo "🚀 Levantando servidor local..."
-  npx vite --port 5173 --host &
-  SERVER_PID=$!
+# Asegurar que el servidor Vite esté activo en segundo plano totalmente desacoplado
+if ! curl -s http://localhost:5173 > /dev/null 2>&1; then
+  echo "🚀 Iniciando servidor interno..."
+  nohup npx vite --port 5173 --host > /dev/null 2>&1 &
   sleep 2
 fi
 
-# Detectar navegador para abrir en modo aplicación de escritorio nativa (sin barra de direcciones)
-if command -v google-chrome &> /dev/null; then
-  google-chrome --app="http://localhost:5173" --window-size=1280,820 &
-elif command -v brave-browser &> /dev/null; then
-  brave-browser --app="http://localhost:5173" --window-size=1280,820 &
-elif command -v chromium &> /dev/null; then
-  chromium --app="http://localhost:5173" --window-size=1280,820 &
-elif command -v chromium-browser &> /dev/null; then
-  chromium-browser --app="http://localhost:5173" --window-size=1280,820 &
-elif command -v xdg-open &> /dev/null; then
-  xdg-open "http://localhost:5173" &
-else
-  python3 -m webbrowser "http://localhost:5173" &
+# 1. Si el binario nativo de escritorio Tauri existe, iniciarlo directamente
+if [ -f "$DIR/src-tauri/target/debug/app" ]; then
+  echo "🖥️  Abriendo ventana nativa de escritorio (Tauri)..."
+  nohup "$DIR/src-tauri/target/debug/app" > /dev/null 2>&1 &
+  disown
+  echo "✅ Dulce Arte listo. Tu terminal queda libre."
+  exit 0
 fi
 
-echo "✅ Dulce Arte ERP ejecutándose en ventana de escritorio."
+# 2. Alternativa: Ventana de escritorio dedicada en modo Web App
+if command -v brave-browser &> /dev/null; then
+  nohup brave-browser --app="http://localhost:5173" --window-size=1280,820 > /dev/null 2>&1 &
+elif command -v google-chrome &> /dev/null; then
+  nohup google-chrome --app="http://localhost:5173" --window-size=1280,820 > /dev/null 2>&1 &
+elif command -v chromium &> /dev/null; then
+  nohup chromium --app="http://localhost:5173" --window-size=1280,820 > /dev/null 2>&1 &
+elif command -v xdg-open &> /dev/null; then
+  nohup xdg-open "http://localhost:5173" > /dev/null 2>&1 &
+fi
+
+disown
+echo "✅ Dulce Arte listo. Tu terminal queda libre."

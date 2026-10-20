@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useAppStore } from '../store/appStore';
 import {
   Settings, Save, RotateCcw, Download,
-  DollarSign, Building2, MessageSquare, Cpu
+  DollarSign, Building2, MessageSquare, Cpu,
+  Palette, Check
 } from 'lucide-react';
+import { AVAILABLE_THEMES } from '../lib/themes';
 
 export default function SettingsPage() {
   const settings = useAppStore(s => s.settings);
@@ -12,6 +14,7 @@ export default function SettingsPage() {
   const pushAlert = useAppStore(s => s.pushAlert);
 
   // Form State
+  const [theme, setTheme] = useState(settings.theme || 'vainilla');
   const [businessName, setBusinessName] = useState(settings.businessName);
   const [rif, setRif] = useState(settings.rif || '');
   const [phone, setPhone] = useState(settings.phone || '');
@@ -33,9 +36,15 @@ export default function SettingsPage() {
   // WhatsApp
   const [waTemplate, setWaTemplate] = useState(settings.waTemplate);
 
+  const handleSelectTheme = (themeId: string) => {
+    setTheme(themeId);
+    updateSettings({ theme: themeId });
+  };
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     updateSettings({
+      theme,
       businessName,
       rif,
       phone,
@@ -105,6 +114,113 @@ export default function SettingsPage() {
 
       <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
         
+        {/* Section 0: Theme & Aesthetics System (MODULE 5) */}
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+          <div className="flex items-center justify-between" style={{ flexWrap: 'wrap', gap: 8 }}>
+            <div className="flex items-center gap-2">
+              <Palette size={18} color="var(--clr-gold-400)" />
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--clr-text-primary)' }}>
+                Personalización Visual — Temas Pasteles & Oscuros
+              </h3>
+            </div>
+            <span className="badge badge-gold" style={{ fontSize: 11 }}>
+              {AVAILABLE_THEMES.length} Temas Disponibles
+            </span>
+          </div>
+
+          <p style={{ fontSize: 12, color: 'var(--clr-text-muted)', margin: 0 }}>
+            Haz clic en cualquier sabor para transformar toda la interfaz en tiempo real. Todos los colores se adaptan a pastelería fina, heladería o modo nocturno.
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {/* Pasteles */}
+            <div>
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--clr-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                🍨 Sabores & Colores Pasteles Claros
+              </span>
+              <div className="theme-grid" style={{ marginTop: 8 }}>
+                {AVAILABLE_THEMES.filter(t => !t.isDark).map(t => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    className={`theme-swatch ${theme === t.id ? 'active' : ''}`}
+                    onClick={() => handleSelectTheme(t.id)}
+                    style={{
+                      background: t.colors.bg,
+                      color: t.colors.text,
+                      border: theme === t.id ? '2px solid var(--clr-gold-500)' : '1px solid var(--clr-border)'
+                    }}
+                  >
+                    <div className="theme-swatch-colors">
+                      <div className="theme-swatch-dot" style={{ background: t.colors.bg }} />
+                      <div className="theme-swatch-dot" style={{ background: t.colors.sidebar }} />
+                      <div className="theme-swatch-dot" style={{ background: t.colors.accent }} />
+                    </div>
+                    <div style={{ fontSize: 20, marginBottom: 2 }}>{t.emoji}</div>
+                    <div className="theme-swatch-name">{t.name}</div>
+                    {theme === t.id && (
+                      <div style={{
+                        marginTop: 4,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 3,
+                        fontSize: 10,
+                        fontWeight: 700,
+                        color: t.colors.accent
+                      }}>
+                        <Check size={11} /> Activo
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Oscuros */}
+            <div>
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--clr-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                🌑 Modo Oscuro Premium
+              </span>
+              <div className="theme-grid" style={{ marginTop: 8 }}>
+                {AVAILABLE_THEMES.filter(t => t.isDark).map(t => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    className={`theme-swatch ${theme === t.id ? 'active' : ''}`}
+                    onClick={() => handleSelectTheme(t.id)}
+                    style={{
+                      background: t.colors.bg,
+                      color: t.colors.text,
+                      border: theme === t.id ? '2px solid var(--clr-gold-500)' : '1px solid rgba(255,255,255,0.1)'
+                    }}
+                  >
+                    <div className="theme-swatch-colors">
+                      <div className="theme-swatch-dot" style={{ background: t.colors.bg }} />
+                      <div className="theme-swatch-dot" style={{ background: t.colors.sidebar }} />
+                      <div className="theme-swatch-dot" style={{ background: t.colors.accent }} />
+                    </div>
+                    <div style={{ fontSize: 20, marginBottom: 2 }}>{t.emoji}</div>
+                    <div className="theme-swatch-name">{t.name}</div>
+                    {theme === t.id && (
+                      <div style={{
+                        marginTop: 4,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 3,
+                        fontSize: 10,
+                        fontWeight: 700,
+                        color: t.colors.accent
+                      }}>
+                        <Check size={11} /> Activo
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Section 1: Business Identity */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
           <div className="flex items-center gap-2">

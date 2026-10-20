@@ -97,7 +97,9 @@ export default function BillboardPage() {
     leaksLost
   };
 
+  const bcvRate = settings?.bcvRate || 46.85;
   const fmt = (n: number) => `$${n.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const fmtBs = (usd: number) => `Bs. ${(usd * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
   return (
     <div className="animate-fadeIn" style={{ display:'flex', flexDirection:'column', gap:'var(--space-8)' }}>
@@ -107,22 +109,36 @@ export default function BillboardPage() {
           <h1 className="page-title">📊 Panel Financiero</h1>
           <p className="page-subtitle">Centro de control gerencial — Mes en curso</p>
         </div>
-        <div className="badge badge-gold">🟢 En Tiempo Real</div>
+        <div className="flex items-center gap-2">
+          <span className="badge badge-mint font-mono" style={{ fontSize: 11 }}>
+            Tasa BCV: Bs. {bcvRate.toFixed(2)}
+          </span>
+          <span className="badge badge-gold">🟢 En Tiempo Real</span>
+        </div>
       </div>
 
       {/* Top Stats */}
       <div className="grid-3">
         {[
-          { label:'Ingresos Brutos', value: fmt(demo.grossIncome), icon: DollarSign, color:'var(--clr-gold-400)', sub:'Este mes' },
-          { label:'Caja Disponible', value: fmt(demo.realCash), icon: TrendingUp, color:'var(--clr-mint-400)', sub:'Cobrado efectivo' },
-          { label:'Dinero en la Calle', value: fmt(demo.accountsReceivable), icon: Users, color:'var(--clr-rose-400)', sub:`${demo.totalDebors} deudores activos` },
+          { label:'Ingresos Brutos', value: fmt(demo.grossIncome), bsValue: fmtBs(demo.grossIncome), icon: DollarSign, color:'var(--clr-gold-400)', sub:'Facturado en el mes' },
+          { label:'Caja Disponible', value: fmt(demo.realCash), bsValue: fmtBs(demo.realCash), icon: TrendingUp, color:'var(--clr-mint-400)', sub:'Cobrado efectivo' },
+          { label:'Dinero en la Calle', value: fmt(demo.accountsReceivable), bsValue: fmtBs(demo.accountsReceivable), icon: Users, color:'var(--clr-rose-400)', sub:`${demo.totalDebors} deudores activos`, clickable: true },
         ].map(stat => (
-          <div key={stat.label} className="stat-card card-gold" style={{ cursor: stat.label === 'Dinero en la Calle' ? 'pointer' : 'default' }}>
+          <div
+            key={stat.label}
+            className="stat-card card-gold"
+            onClick={() => stat.clickable && setActiveModule('customers')}
+            style={{ cursor: stat.clickable ? 'pointer' : 'default' }}
+            title={stat.clickable ? 'Clic para ver detalles en Cuaderno de Clientes' : undefined}
+          >
             <div className="flex items-center justify-between">
               <span className="stat-card-label">{stat.label}</span>
               <stat.icon size={18} color={stat.color} />
             </div>
             <div className="stat-card-value" style={{ color: stat.color }}>{stat.value}</div>
+            <div style={{ fontSize: 13, fontFamily: 'var(--font-mono)', color: 'var(--clr-text-secondary)', marginTop: 4 }}>
+              {stat.bsValue}
+            </div>
             <div className="stat-card-sub">{stat.sub}</div>
           </div>
         ))}
@@ -137,11 +153,15 @@ export default function BillboardPage() {
           <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
             <ThermometerBar label="Costo de Materia Prima (COGS)" actual={demo.cogsPctActual} target={settings?.cogsPct ?? 30} />
             <ThermometerBar label="Gastos Operativos (OPEX)" actual={demo.opexPctActual} target={settings?.opexPct ?? 18} />
-            <ThermometerBar label="% Sueldo del Dueño" actual={(demo.ownerSalary / demo.grossIncome)*100} target={settings?.ownerSalaryPct ?? 20} />
+            <ThermometerBar
+              label="% Sueldo del Dueño"
+              actual={demo.grossIncome > 0 ? (demo.ownerSalary / demo.grossIncome) * 100 : (settings?.ownerSalaryPct ?? 20)}
+              target={settings?.ownerSalaryPct ?? 20}
+            />
           </div>
-          <div style={{ padding: 'var(--space-3)', background:'rgba(245,200,66,0.05)', borderRadius:'var(--radius-md)',
-            border:'1px solid rgba(245,200,66,0.15)', fontSize:12, color:'var(--clr-text-muted)' }}>
-            💡 Las barras en rojo indican desviación crítica &gt; 20% sobre la meta.
+          <div style={{ padding: 'var(--space-3)', background:'rgba(245,200,66,0.08)', borderRadius:'var(--radius-md)',
+            border:'1px solid rgba(245,200,66,0.2)', fontSize:12, color:'var(--clr-text-secondary)' }}>
+            💡 Las barras en rojo indican desviación crítica &gt; 20% sobre la meta configurada.
           </div>
         </Quadrant>
 

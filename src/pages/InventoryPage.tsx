@@ -399,18 +399,8 @@ export default function InventoryPage() {
 
       {/* CREATE / EDIT MODAL */}
       {isModalOpen && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0,0,0,0.7)',
-          backdropFilter: 'blur(5px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          padding: 20
-        }}>
-          <div className="card animate-fadeIn" style={{ maxWidth: 520, width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}>
+          <div className="modal-content animate-fadeIn" style={{ maxWidth: 520, width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
             <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--clr-text-primary)' }}>
               {editingId ? 'Editar Materia Prima / Empaque' : 'Nueva Materia Prima / Empaque'}
             </h2>
@@ -523,18 +513,8 @@ export default function InventoryPage() {
 
       {/* QUICK ADJUSTMENT MODAL */}
       {adjustModalOpen && adjustMat && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0,0,0,0.7)',
-          backdropFilter: 'blur(5px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          padding: 20
-        }}>
-          <div className="card animate-fadeIn" style={{ maxWidth: 450, width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setAdjustModalOpen(false); }}>
+          <div className="modal-content animate-fadeIn" style={{ maxWidth: 450, width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
             <h2 style={{ fontSize: 17, fontWeight: 700, color: 'var(--clr-text-primary)' }}>
               Movimiento Rápido de Stock
             </h2>

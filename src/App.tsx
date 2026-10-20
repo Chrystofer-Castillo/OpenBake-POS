@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import './index.css';
 import { useAppStore } from './store/appStore';
 import Sidebar from './components/layout/Sidebar';
@@ -60,6 +61,11 @@ function PageRouter() {
 
 export default function App() {
   const sidebarOpen = useAppStore(s => s.sidebarOpen);
+  const theme = useAppStore(s => s.settings.theme || 'vainilla');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
   return (
     <div className="app-layout">
       <Sidebar />

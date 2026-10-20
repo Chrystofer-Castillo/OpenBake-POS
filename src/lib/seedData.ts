@@ -20,6 +20,7 @@ export const INITIAL_SETTINGS: AppSettings = {
   netProfitPct: 8,
   wholesalePct: 18, // 18% descuento al mayor por defecto
   bcvRate: 46.85,  // Tasa de cambio oficial BCV de referencia (Bs/USD)
+  theme: 'vainilla',
   updatedAt: new Date().toISOString()
 };
 
@@ -353,6 +354,7 @@ export const INITIAL_CUSTOMERS: Customer[] = [
     notes: 'Cliente fiel semanal. Prefiere helado de mantecado con pistacho.',
     defaultPriceMode: 'DYNAMIC',
     totalDebt: 0.00,
+    paymentDueDate: null,
     solvencyStatus: 'ok',
     createdAt: '2026-01-05T09:00:00Z',
     updatedAt: '2026-01-05T09:00:00Z'
@@ -366,6 +368,7 @@ export const INITIAL_CUSTOMERS: Customer[] = [
     notes: 'Cliente Mayorista. Compra tinas de 5L y 10L cada martes.',
     defaultPriceMode: 'DYNAMIC',
     totalDebt: 145.00,
+    paymentDueDate: '2026-01-25T00:00:00Z',
     solvencyStatus: 'overdue',
     createdAt: '2026-01-08T14:30:00Z',
     updatedAt: '2026-01-18T10:00:00Z'
@@ -379,6 +382,7 @@ export const INITIAL_CUSTOMERS: Customer[] = [
     notes: 'Pedidos especiales de tortas y marquesas para cumpleaños.',
     defaultPriceMode: 'DYNAMIC',
     totalDebt: 25.00,
+    paymentDueDate: '2026-02-01T00:00:00Z',
     solvencyStatus: 'debt',
     createdAt: '2026-01-12T16:20:00Z',
     updatedAt: '2026-01-19T11:00:00Z'
@@ -392,6 +396,7 @@ export const INITIAL_CUSTOMERS: Customer[] = [
     notes: 'Compra cono doble y tarrina de parchita.',
     defaultPriceMode: 'DYNAMIC',
     totalDebt: 0.00,
+    paymentDueDate: null,
     solvencyStatus: 'ok',
     createdAt: '2026-01-14T18:00:00Z',
     updatedAt: '2026-01-14T18:00:00Z'

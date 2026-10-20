@@ -23,6 +23,7 @@ export interface AppSettings {
   netProfitPct: number;
   wholesalePct: number;
   bcvRate: number;
+  theme: string;         // Theme ID (e.g. 'vainilla', 'fresa', 'chocolate-negro')
   updatedAt: string;
 }
 
@@ -115,6 +116,7 @@ export interface Customer {
   notes: string | null;
   defaultPriceMode: PriceMode;
   totalDebt: number;
+  paymentDueDate: string | null;   // ISO date string for payment deadline
   createdAt: string;
   updatedAt: string;
   // computed
@@ -185,3 +187,17 @@ export interface Deviation {
 
 // ── AI Query Builder ──────────────────────────────────────────
 export type AiQueryMode = 'market' | 'recipe' | 'social';
+
+// ── Theme System ──────────────────────────────────────────────
+export interface ThemeOption {
+  id: string;
+  name: string;
+  emoji: string;
+  isDark: boolean;
+  colors: {
+    bg: string;
+    sidebar: string;
+    accent: string;
+    text: string;
+  };
+}

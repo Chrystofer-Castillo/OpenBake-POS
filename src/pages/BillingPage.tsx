@@ -314,7 +314,7 @@ export default function BillingPage() {
           </div>
 
           {/* Right: Checkout Ticket & Payment Panel */}
-          <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', background: '#FFFFFF', border: '2px solid var(--clr-border-strong)' }}>
+          <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', background: 'var(--clr-bg-card)', border: '2px solid var(--clr-border-strong)' }}>
             
             <div className="flex items-center justify-between" style={{ borderBottom: '1px solid var(--clr-border)', paddingBottom: 10 }}>
               <div className="flex items-center gap-2">
@@ -369,7 +369,7 @@ export default function BillingPage() {
 
             {/* Items List in Ticket */}
             <div style={{
-              background: '#FAF6EE',
+              background: 'var(--clr-bg-subtle)',
               borderRadius: 'var(--radius-md)',
               padding: '12px',
               display: 'flex',
@@ -378,7 +378,7 @@ export default function BillingPage() {
               minHeight: 180,
               maxHeight: 280,
               overflowY: 'auto',
-              border: '1px solid #ECE2D2'
+              border: '1px solid var(--clr-border)'
             }}>
               {cart.length === 0 ? (
                 <div style={{ textAlign: 'center', color: 'var(--clr-text-muted)', margin: 'auto' }}>
@@ -387,19 +387,19 @@ export default function BillingPage() {
                 </div>
               ) : (
                 cart.map((it, idx) => (
-                  <div key={idx} className="flex items-center justify-between" style={{ borderBottom: '1px dashed #E2D6C5', paddingBottom: 6 }}>
+                  <div key={idx} className="flex items-center justify-between" style={{ borderBottom: '1px dashed var(--clr-border)', paddingBottom: 6 }}>
                     <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                       <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--clr-text-primary)' }}>{it.name}</span>
                       <span style={{ fontSize: 11, color: 'var(--clr-text-muted)' }}>${it.unitPrice.toFixed(2)} c/u</span>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1" style={{ background: '#FFFFFF', borderRadius: 6, border: '1px solid #DDD0BF', padding: '1px 4px' }}>
+                      <div className="flex items-center gap-1" style={{ background: 'var(--clr-bg-surface)', borderRadius: 6, border: '1px solid var(--clr-border-strong)', padding: '1px 4px' }}>
                         <button type="button" onClick={() => handleUpdateQty(idx, -1)} className="btn-ghost" style={{ padding: '0 4px', fontSize: 13, fontWeight: 800 }}>-</button>
-                        <span className="font-mono font-bold" style={{ fontSize: 12, minWidth: 18, textAlign: 'center' }}>{it.qty}</span>
+                        <span className="font-mono font-bold" style={{ fontSize: 12, minWidth: 18, textAlign: 'center', color: 'var(--clr-text-primary)' }}>{it.qty}</span>
                         <button type="button" onClick={() => handleUpdateQty(idx, 1)} className="btn-ghost" style={{ padding: '0 4px', fontSize: 13, fontWeight: 800 }}>+</button>
                       </div>
-                      <span className="font-mono font-bold" style={{ fontSize: 13, minWidth: 60, textAlign: 'right' }}>
+                      <span className="font-mono font-bold" style={{ fontSize: 13, minWidth: 60, textAlign: 'right', color: 'var(--clr-text-primary)' }}>
                         ${(it.qty * it.unitPrice).toFixed(2)}
                       </span>
                       <button type="button" onClick={() => handleRemoveFromCart(idx)} className="btn-ghost" style={{ color: 'var(--clr-danger)', padding: 2 }}>
@@ -413,23 +413,23 @@ export default function BillingPage() {
 
             {/* Total Display */}
             <div style={{
-              background: '#FFF8EE',
+              background: 'var(--clr-bg-elevated)',
               borderRadius: 'var(--radius-md)',
               padding: '14px 16px',
-              border: '1px solid #F0DFCC',
+              border: '1px solid var(--clr-border-strong)',
               display: 'flex',
               flexDirection: 'column',
               gap: 4
             }}>
               <div className="flex items-center justify-between">
                 <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--clr-text-primary)' }}>TOTAL A PAGAR:</span>
-                <span className="font-mono font-bold" style={{ fontSize: 28, color: 'var(--clr-gold-600)' }}>
+                <span className="font-mono font-bold" style={{ fontSize: 28, color: 'var(--clr-gold-500)' }}>
                   ${cartTotal.toFixed(2)}
                 </span>
               </div>
               <div className="flex items-center justify-between" style={{ fontSize: 13, color: 'var(--clr-text-secondary)' }}>
                 <span>Equivalente Bolívares (BCV):</span>
-                <span className="font-mono font-bold">Bs. {(cartTotal * settings.bcvRate).toFixed(2)}</span>
+                <span className="font-mono font-bold" style={{ color: 'var(--clr-text-primary)' }}>Bs. {(cartTotal * settings.bcvRate).toFixed(2)}</span>
               </div>
             </div>
 
@@ -470,9 +470,9 @@ export default function BillingPage() {
                 padding: '14px',
                 fontSize: 15,
                 fontWeight: 800,
-                boxShadow: '0 4px 16px rgba(223, 152, 50, 0.35)',
+                boxShadow: cart.length > 0 ? '0 4px 16px rgba(223, 152, 50, 0.35)' : 'none',
                 cursor: cart.length === 0 ? 'not-allowed' : 'pointer',
-                opacity: cart.length === 0 ? 0.6 : 1
+                opacity: cart.length === 0 ? 0.5 : 1
               }}
             >
               <span>Confirmar Venta & Descontar Inventario</span>
@@ -580,18 +580,8 @@ export default function BillingPage() {
 
       {/* VIEW RECEIPT MODAL */}
       {viewingInvoice && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(30, 20, 10, 0.75)',
-          backdropFilter: 'blur(6px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          padding: 20
-        }}>
-          <div className="card animate-fadeIn" style={{ maxWidth: 500, width: '100%', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setViewingInvoice(null); }}>
+          <div className="modal-content animate-fadeIn" style={{ maxWidth: 500, width: '100%', display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div style={{ textAlign: 'center', borderBottom: '1px dashed var(--clr-border)', paddingBottom: 10 }}>
               <h2 style={{ fontSize: 18, fontWeight: 800, color: 'var(--clr-text-primary)' }}>{settings.businessName}</h2>
               <p style={{ fontSize: 12, color: 'var(--clr-text-muted)', margin: 0 }}>RIF: {settings.rif} · {settings.city}, {settings.state}</p>
