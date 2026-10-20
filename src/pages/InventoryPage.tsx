@@ -14,9 +14,9 @@ export default function InventoryPage() {
   const deleteMaterial = useAppStore(s => s.deleteMaterial);
   const pushAlert = useAppStore(s => s.pushAlert);
 
-  // Search and filter
+  // Search and filter: Default to INSUMO (Solo Ingredientes) per user request
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState<'ALL' | 'INSUMO' | 'EMPAQUE' | 'ALERTS'>('ALL');
+  const [filterType, setFilterType] = useState<'INSUMO' | 'EMPAQUE' | 'ALL' | 'ALERTS'>('INSUMO');
 
   // Modal for new / edit material
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -258,30 +258,30 @@ export default function InventoryPage() {
 
         <div className="flex items-center gap-2">
           <button
+            onClick={() => setFilterType('INSUMO')}
+            className={`btn ${filterType === 'INSUMO' ? 'btn-caramel' : 'btn-secondary'}`}
+            style={{ fontSize: 12, padding: '6px 14px' }}
+          >
+            🌾 Solo Ingredientes ({materials.filter(m => m.type === 'INSUMO').length})
+          </button>
+          <button
+            onClick={() => setFilterType('EMPAQUE')}
+            className={`btn ${filterType === 'EMPAQUE' ? 'btn-caramel' : 'btn-secondary'}`}
+            style={{ fontSize: 12, padding: '6px 14px' }}
+          >
+            📦 Empaques y Envases ({materials.filter(m => m.type === 'EMPAQUE').length})
+          </button>
+          <button
             onClick={() => setFilterType('ALL')}
             className={`btn ${filterType === 'ALL' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ fontSize: 12, padding: '6px 12px' }}
+            style={{ fontSize: 12, padding: '6px 14px' }}
           >
             Todos ({materials.length})
           </button>
           <button
-            onClick={() => setFilterType('INSUMO')}
-            className={`btn ${filterType === 'INSUMO' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ fontSize: 12, padding: '6px 12px' }}
-          >
-            Insumos
-          </button>
-          <button
-            onClick={() => setFilterType('EMPAQUE')}
-            className={`btn ${filterType === 'EMPAQUE' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ fontSize: 12, padding: '6px 12px' }}
-          >
-            Empaques
-          </button>
-          <button
             onClick={() => setFilterType('ALERTS')}
             className={`btn ${filterType === 'ALERTS' ? 'btn-danger' : 'btn-secondary'}`}
-            style={{ fontSize: 12, padding: '6px 12px' }}
+            style={{ fontSize: 12, padding: '6px 14px' }}
           >
             <AlertTriangle size={13} /> Alertas ({alertCount})
           </button>

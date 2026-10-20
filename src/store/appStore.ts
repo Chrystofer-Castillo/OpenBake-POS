@@ -85,7 +85,7 @@ export const useAppStore = create<AppState & AppActions>()(
     recipes: loadFromStorage<Recipe[]>('recipes', INITIAL_RECIPES),
     customers: loadFromStorage<Customer[]>('customers', INITIAL_CUSTOMERS),
     invoices: loadFromStorage<Invoice[]>('invoices', INITIAL_INVOICES),
-    activeModule: 'billboard',
+    activeModule: 'billing',
     sidebarOpen: true,
     alerts: [],
 
