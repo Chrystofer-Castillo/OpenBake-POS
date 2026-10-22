@@ -66,6 +66,9 @@ export interface Recipe {
   competitorPrice: number | null;
   roundingMode: RoundingMode;
   isArchived: number;
+  yieldUnits?: number;
+  unitName?: string;
+  formulationMode?: FormulationMode;
   createdAt: string;
   updatedAt: string;
   // computed / joined
@@ -73,6 +76,9 @@ export interface Recipe {
   costs?: RecipeCosts;
   prices?: RecipePrices;
 }
+
+export type KitchenUnit = 'g' | 'kg' | 'ml' | 'l' | 'cda' | 'cdta' | 'taza' | 'und' | 'pizca';
+export type FormulationMode = 'DIRECT_WEIGHT' | 'DYNAMIC_PCT' | 'BAKERS_PCT' | 'PERCENTAGE';
 
 export interface RecipeItem {
   id: number;
@@ -83,10 +89,12 @@ export interface RecipeItem {
   isLocked: number;
   errorTolPct: number;
   sortOrder: number;
-  // joined
+  // joined & culinary
   materialName?: string;
   grossWeightMg?: number;
   costAmount?: number;
+  unit?: KitchenUnit;
+  displayQty?: number;
 }
 
 export interface RecipeCosts {
@@ -96,6 +104,7 @@ export interface RecipeCosts {
   baseTotal: number;      // Cbase
   finalWeightG: number;   // after thermal waste
   costPerG: number;
+  costPerUnit?: number;
 }
 
 export interface RecipePrices {
@@ -104,6 +113,10 @@ export interface RecipePrices {
   premium: number;        // premium price
   mayor: number;          // wholesale price
   wholesalePct: number;   // configured discount %
+  unitPiso?: number;
+  unitOptimo?: number;
+  unitPremium?: number;
+  unitMayor?: number;
 }
 
 // ── Customers ─────────────────────────────────────────────────

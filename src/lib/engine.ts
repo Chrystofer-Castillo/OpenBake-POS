@@ -195,7 +195,8 @@ export function calcRecipeCosts(
 export function calcPrices(
   cbase: number,
   settings: Pick<AppSettings, 'taxPct' | 'cogsPct' | 'wholesalePct'>,
-  complexityPct = 30   // Premium surcharge (25–40%)
+  complexityPct = 30,   // Premium surcharge (25–40%)
+  yieldUnits = 1
 ): RecipePrices {
   const Cbase = D(cbase);
   const tax   = D(1).plus(D(settings.taxPct).div(100));
@@ -218,12 +219,22 @@ export function calcPrices(
   const mayorRaw = optimo.mul(D(1).minus(D(settings.wholesalePct).div(100)));
   const mayor = Decimal.max(mayorRaw, piso);
 
+  const safeYield = Math.max(1, yieldUnits || 1);
+  const pisoNum = applyRounding(piso).toNumber();
+  const optimoNum = applyRounding(optimo).toNumber();
+  const premiumNum = applyRounding(premium).toNumber();
+  const mayorNum = applyRounding(mayor).toNumber();
+
   return {
-    piso:        applyRounding(piso).toNumber(),
-    optimo:      applyRounding(optimo).toNumber(),
-    premium:     applyRounding(premium).toNumber(),
-    mayor:       applyRounding(mayor).toNumber(),
-    wholesalePct: settings.wholesalePct
+    piso:        pisoNum,
+    optimo:      optimoNum,
+    premium:     premiumNum,
+    mayor:       mayorNum,
+    wholesalePct: settings.wholesalePct,
+    unitPiso:    applyRounding(D(pisoNum).div(safeYield)).toNumber(),
+    unitOptimo:  applyRounding(D(optimoNum).div(safeYield)).toNumber(),
+    unitPremium: applyRounding(D(premiumNum).div(safeYield)).toNumber(),
+    unitMayor:   applyRounding(D(mayorNum).div(safeYield)).toNumber()
   };
 }
 

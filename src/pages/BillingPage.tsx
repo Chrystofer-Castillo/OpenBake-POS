@@ -294,7 +294,7 @@ export default function BillingPage() {
                         {rec.name}
                       </strong>
                       <span style={{ fontSize: 11, color: 'var(--clr-text-secondary)' }}>
-                        Rendimiento: {rec.batchWeightG}g
+                        {rec.yieldUnits && rec.yieldUnits > 1 ? `Rinde: ${rec.yieldUnits} ${rec.unitName || 'porciones'} (${rec.batchWeightG}g)` : `Lote: ${rec.batchWeightG}g`}
                       </span>
                     </div>
 

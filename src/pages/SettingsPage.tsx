@@ -129,14 +129,71 @@ export default function SettingsPage() {
           </div>
 
           <p style={{ fontSize: 12, color: 'var(--clr-text-muted)', margin: 0 }}>
-            Haz clic en cualquier sabor para transformar toda la interfaz en tiempo real. Todos los colores se adaptan a pastelería fina, heladería o modo nocturno.
+            Elige entre el <strong>Tema Claro</strong> (óptimo para el mostrador y luz natural) o el <strong>Tema Oscuro</strong> (modo nocturno con alto contraste para botones y campos).
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {/* Dos Modos Principales Claros y Oscuros (Solicitud Explícita) */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}>
+              <div
+                onClick={() => handleSelectTheme('vainilla')}
+                style={{
+                  padding: '16px',
+                  borderRadius: 'var(--radius-md)',
+                  background: '#FBF5ED',
+                  border: theme === 'vainilla' ? '2px solid var(--clr-gold-500)' : '1px solid var(--clr-border)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 12,
+                  boxShadow: theme === 'vainilla' ? '0 4px 14px rgba(223, 152, 50, 0.25)' : 'var(--shadow-sm)',
+                  transition: 'all 150ms ease'
+                }}
+              >
+                <div style={{ fontSize: 30 }}>☀️</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <strong style={{ fontSize: 14, color: '#24150D' }}>Tema Claro Principal</strong>
+                  <span style={{ fontSize: 12, color: '#634F43' }}>Vainilla Artesanal (Día / Mostrador)</span>
+                </div>
+                {theme === 'vainilla' && (
+                  <span style={{ marginLeft: 'auto', color: '#DF9832', fontWeight: 800, fontSize: 12 }}>
+                    ✓ Activo
+                  </span>
+                )}
+              </div>
+
+              <div
+                onClick={() => handleSelectTheme('chocolate-negro')}
+                style={{
+                  padding: '16px',
+                  borderRadius: 'var(--radius-md)',
+                  background: '#1E1614',
+                  border: theme === 'chocolate-negro' ? '2px solid var(--clr-gold-500)' : '1px solid var(--clr-border)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 12,
+                  boxShadow: theme === 'chocolate-negro' ? '0 4px 14px rgba(229, 163, 56, 0.25)' : 'var(--shadow-sm)',
+                  transition: 'all 150ms ease'
+                }}
+              >
+                <div style={{ fontSize: 30 }}>🌙</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <strong style={{ fontSize: 14, color: '#F5ECE4' }}>Tema Oscuro Principal</strong>
+                  <span style={{ fontSize: 12, color: '#BAAAA0' }}>Chocolate Negro 85% (Noche / Alto Contraste)</span>
+                </div>
+                {theme === 'chocolate-negro' && (
+                  <span style={{ marginLeft: 'auto', color: '#E5A338', fontWeight: 800, fontSize: 12 }}>
+                    ✓ Activo
+                  </span>
+                )}
+              </div>
+            </div>
+
             {/* Pasteles */}
             <div>
               <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--clr-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                🍨 Sabores & Colores Pasteles Claros
+                🍨 Otros Sabores & Colores Pasteles Claros
               </span>
               <div className="theme-grid" style={{ marginTop: 8 }}>
                 {AVAILABLE_THEMES.filter(t => !t.isDark).map(t => (
