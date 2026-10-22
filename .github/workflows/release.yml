@@ -15,7 +15,7 @@ jobs:
       matrix:
         include:
           - platform: 'windows-latest'
-            args: ''
+            args: '--bundles nsis'
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -26,7 +26,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -36,7 +35,7 @@ jobs:
       - name: Install frontend dependencies
         run: npm install
 
-      - name: Build frontend & package release
+      - name: Build frontend
         run: npm run build
 
       - name: Build with Tauri Action
@@ -44,9 +43,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: 'OpenBake-POS ${{ github.ref_name }}'
-          releaseBody: '🚀 Versión oficial de OpenBake-POS para Windows. Descarga el archivo instalador .exe abajo.'
+          tagName: ${{ github.ref_type == 'tag' && github.ref_name || 'v2.0.0' }}
+          releaseName: 'OpenBake-POS ${{ github.ref_type == 'tag' && github.ref_name || 'v2.0.0' }}'
+          releaseBody: '🚀 Versión oficial de OpenBake-POS para Windows. Descarga el instalador .exe en los assets abajo.'
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
