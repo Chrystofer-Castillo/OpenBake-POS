@@ -77,7 +77,7 @@ export default function SettingsPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `dulce_arte_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `openbake_pos_backup_${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     pushAlert({ type: 'success', message: 'Copia de seguridad descargada exitosamente' });

@@ -13,10 +13,11 @@ import {
 } from '../lib/seedData';
 
 // Local storage key helper
-const STORAGE_PREFIX = 'dulce_arte_v2_';
+const STORAGE_PREFIX = 'openbake_pos_v2_';
+const LEGACY_STORAGE_PREFIX = 'dulce_arte_v2_';
 function loadFromStorage<T>(key: string, fallback: T): T {
   try {
-    const raw = localStorage.getItem(STORAGE_PREFIX + key);
+    const raw = localStorage.getItem(STORAGE_PREFIX + key) ?? localStorage.getItem(LEGACY_STORAGE_PREFIX + key);
     return raw ? JSON.parse(raw) : fallback;
   } catch {
     return fallback;

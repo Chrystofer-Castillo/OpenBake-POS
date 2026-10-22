@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Dulce Arte",
+  "productName": "OpenBake-POS",
   "version": "2.0.0",
-  "identifier": "com.dulcearte.erp",
+  "identifier": "com.openbakepos.app",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Dulce Arte ERP",
+        "title": "OpenBake-POS",
         "width": 1280,
         "height": 800,
         "minWidth": 960,
@@ -31,11 +31,11 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "publisher": "Dulce Arte",
-    "copyright": "© 2026 Dulce Arte. Todos los derechos reservados.",
+    "publisher": "OpenBake-POS",
+    "copyright": "© 2026 OpenBake-POS. Todos los derechos reservados.",
     "category": "Business",
-    "shortDescription": "Sistema ERP para repostería y heladería — Offline-First",
-    "longDescription": "Sistema ERP completo para gestión de recetas, inventario, clientes y finanzas de repostería y heladería. Funciona 100% sin internet.",
+    "shortDescription": "OpenBake-POS — Sistema POS & ERP para repostería y panadería",
+    "longDescription": "Sistema POS y ERP para repostería y panadería. Gestión de recetas, inventario y ventas offline-first.",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

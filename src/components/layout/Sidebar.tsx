@@ -31,7 +31,7 @@ export default function Sidebar() {
         <div className="sidebar-logo-icon">🧁</div>
         {sidebarOpen && (
           <div className="sidebar-logo-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            Dulce Arte
+            OpenBake-POS
           </div>
         )}
         <button

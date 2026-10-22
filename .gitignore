@@ -23,3 +23,8 @@ Documentos
 *.njsproj
 *.sln
 *.sw?
+
+# Release outputs (binary installers)
+releases/*
+!releases/.gitkeep
+!releases/README.md

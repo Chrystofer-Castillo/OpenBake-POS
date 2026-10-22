@@ -2,7 +2,7 @@ import type { RawMaterial, Recipe, Customer, Invoice, AppSettings } from '../typ
 
 export const INITIAL_SETTINGS: AppSettings = {
   id: 1,
-  businessName: 'Heladería & Pastelería Dulce Arte',
+  businessName: 'OpenBake-POS',
   logoPath: null,
   rif: 'J-50291847-1',
   phone: '+58 424-612-8899',
